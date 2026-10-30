@@ -1,0 +1,60 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: public_health_postgres
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-health_analytics}
+      POSTGRES_USER: ${POSTGRES_USER:-health_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Create .env from .env.example}
+
+    ports:
+      - "55432:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  dashboard:
+    build:
+      context: .
+
+    container_name: public_health_dashboard
+    restart: unless-stopped
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+    ports:
+      - "8501:8501"
+
+    environment:
+      DATABASE_URL: "postgresql+psycopg://${POSTGRES_USER:-health_user}:${POSTGRES_PASSWORD:?Create .env from .env.example}@postgres:5432/${POSTGRES_DB:-health_analytics}"
+      POSTGRES_DB: ${POSTGRES_DB:-health_analytics}
+      POSTGRES_USER: ${POSTGRES_USER:-health_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Create .env from .env.example}
+
+      DBT_HOST: postgres
+      DBT_PORT: "5432"
+      DBT_SCHEMA: public
+      DBT_PROFILES_DIR: /app/dbt
+
+    volumes:
+      - ./dashboard:/app/dashboard
+      - ./src:/app/src
+      - ./dbt:/app/dbt
+
+volumes:
+  postgres_data:
