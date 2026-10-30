@@ -4,6 +4,23 @@
 
 The dashboard is designed to make the underlying observations easy to inspect. Missing values remain missing, reporting periods are shown explicitly, and indicator-specific notes explain how each measure should be interpreted.
 
+## Dashboard preview
+
+The screenshots below show the interactive dashboard, indicator-specific guidance, database-wide coverage reporting, and historical trend exploration.
+
+<p align="center">
+  <img src="docs/screenshots/01-dashboard-overview.png" alt="Health Observatory dashboard overview with country and indicator filters and KPI cards" width="100%">
+</p>
+
+<p align="center">
+  <img src="docs/screenshots/02-indicator-guidance.png" alt="Indicator guidance explaining current health expenditure as a percentage of GDP" width="49%">
+  <img src="docs/screenshots/03-data-coverage.png" alt="Data completeness report showing available and missing observations by indicator" width="49%">
+</p>
+
+<p align="center">
+  <img src="docs/screenshots/04-historical-trends.png" alt="Historical trend chart showing health expenditure as a percentage of GDP across countries" width="100%">
+</p>
+
 ## What the platform does
 
 - Retrieves public health indicator data from the [World Bank Indicators API](https://api.worldbank.org/).
